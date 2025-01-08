@@ -61,7 +61,7 @@ const Login = () => {
 
   return (
     <div className='flex h-screen flex-col justify-center'>
-      <div>
+      <div className='flex justify-center'>
         <label htmlFor='password' className='sr-only'>
           Password
         </label>
