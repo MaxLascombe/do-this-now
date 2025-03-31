@@ -45,8 +45,7 @@ const Progress = () => {
       ? (progressTomorrow.data.todo - progress.data.todo) * 14
       : undefined
 
-  console.log({ progress: progress.data, progressTmrw: progressTomorrow.data })
-
+  // console.log statement removed for production
   return (
     <div className='flex justify-center'>
       <div className='flex flex-col items-center gap-1 text-xs font-light'>
