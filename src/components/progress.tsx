@@ -1,7 +1,15 @@
-import { faFire, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
+import {
+  faFire,
+  faHeart,
+  faHourglassHalf,
+  faStar,
+} from '@fortawesome/free-solid-svg-icons'
 import { minutesToHours } from '../helpers/time'
 import { useDate } from '../hooks/useDate'
-import { useQueryProgressToday } from '../hooks/useQueryProgressToday'
+import {
+  useQueryProgressToday,
+  useQueryProgressTomorrow,
+} from '../hooks/useQueryProgressToday'
 import { Tag } from './tags'
 
 const START_OF_DAY = 8 * 60 + 30 // 8:30
@@ -31,6 +39,13 @@ const Progress = () => {
     (doneUsingLives - doneUsingAllLives) * 2 +
     (done - doneUsingLives) * 3
 
+  const progressTomorrow = useQueryProgressTomorrow()
+  const toDoTodayInOrderToReduceTomorrow =
+    progressTomorrow.data && progress.data
+      ? (progressTomorrow.data.todo - progress.data.todo) * 14
+      : undefined
+
+  // console.log statement removed for production
   return (
     <div className='flex justify-center'>
       <div className='flex flex-col items-center gap-1 text-xs font-light'>
@@ -75,6 +90,19 @@ const Progress = () => {
               iconRight={true}
             />
           )}
+
+          {toDoTodayInOrderToReduceTomorrow !== undefined &&
+            toDoTodayInOrderToReduceTomorrow > 0 && (
+              <Tag
+                icon={faHourglassHalf}
+                text={minutesToHours(toDoTodayInOrderToReduceTomorrow)}
+                color={
+                  done >= toDoTodayInOrderToReduceTomorrow
+                    ? 'text-red-400'
+                    : 'text-white/50'
+                }
+              />
+            )}
         </div>
 
         <div
