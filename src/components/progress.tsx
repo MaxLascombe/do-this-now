@@ -1,4 +1,4 @@
-import { faFire, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
+import { faFire, faHeart, faStar, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { minutesToHours } from '../helpers/time'
 import { useDate } from '../hooks/useDate'
 import { useQueryProgressToday } from '../hooks/useQueryProgressToday'
@@ -13,11 +13,11 @@ const Progress = () => {
 
   if (progress.data === undefined) return <></>
 
-  const { done, lives, streak, streakIsActive, todo, theoreticalMinimum, repeatingTasks, daysUntilAllDone } = progress.data
+  const { done, lives, streak, streakIsActive, todo, theoreticalMinimum, daysUntilAllDone, minutesToReduceTomorrowDays } = progress.data
 
   console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
-  console.log(`REPEATING TASKS:`, repeatingTasks)
   console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
+  console.log(`MINUTES TO REDUCE TOMORROW'S DAYS: ${minutesToReduceTomorrowDays}`)
 
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =
@@ -47,15 +47,16 @@ const Progress = () => {
             <>On schedule</>
           )}
         </div>
-        <div className='flex w-full justify-center gap-5 text-white'>
+
+        <div className='flex w-full justify-center gap-5 text-white flex-wrap max-w-full gap-y-1 mx-5'>
           <Tag icon={faStar} text={'' + points} />
+
           <Tag
             icon={faFire}
             text={'' + streak}
             color={streakIsActive ? 'text-amber-500' : 'text-white/50'}
           />
-        </div>
-        <div className='flex w-full justify-center gap-5 text-white'>
+
           {livesLeft > 0 ? (
             <Tag
               icon={faHeart}
@@ -76,6 +77,14 @@ const Progress = () => {
             <Tag
               icon={faHeart}
               text={minutesToHours(todo - done) + ' to'}
+              iconRight={true}
+            />
+          )}
+          
+          {minutesToReduceTomorrowDays > 0 && (
+            <Tag
+              icon={faArrowDown}
+              text={minutesToHours(minutesToReduceTomorrowDays - done - livesUsed) + ' to'}
               iconRight={true}
             />
           )}

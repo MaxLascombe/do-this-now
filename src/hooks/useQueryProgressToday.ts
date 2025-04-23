@@ -10,8 +10,8 @@ const progressTodaySchema = z.object({
   streak: z.number(),
   streakIsActive: z.boolean(),
   theoreticalMinimum: z.number(),
-  repeatingTasks: z.array(z.tuple([z.string(), z.number()])),
   daysUntilAllDone: z.number(),
+  minutesToReduceTomorrowDays: z.number(),
 })
 
 export const useQueryProgressToday = () => {

@@ -157,6 +157,94 @@ function findMinimumDaysNeeded(today, allTasks, done, cappedTodo) {
 }
 
 /**
+ * Find the minutes that will be added on the day that occurs in daysUntilAllDone + 1
+ * @param {Date} today - The reference date
+ * @param {Array} allTasks - All tasks from the database
+ * @param {number} daysUntilAllDone - Today's daysUntilAllDone value
+ * @returns {number} - Minutes that will be added on the target day
+ */
+function findMinutesOnTargetDay(today, allTasks, daysUntilAllDone) {
+  // Calculate the target date (the day that occurs in daysUntilAllDone + 1)
+  const targetDate = new Date(today);
+  targetDate.setDate(targetDate.getDate() + daysUntilAllDone + 1);
+  
+  let totalMinutesOnTargetDay = 0;
+  
+  // Check each task to see if it's due on the target day
+  for (const task of allTasks) {
+    const time = parseInt(task.timeFrame);
+    let due = new Date(task.due);
+    
+    // If the task is due on the target day, add its minutes
+    if (due.getTime() === targetDate.getTime()) {
+      totalMinutesOnTargetDay += time;
+    }
+    
+    // For repeating tasks, check if they repeat on the target day
+    if (task.repeat !== 'No Repeat') {
+      // Check if the task repeats on the target day
+      let isDueOnTargetDay = false;
+      
+      if (task.repeat === 'Daily') {
+        isDueOnTargetDay = true;
+      }
+      else if (task.repeat === 'Weekdays') {
+        // Check if target day is a weekday (1-5, where 0 is Sunday)
+        const dayOfWeek = targetDate.getDay();
+        isDueOnTargetDay = dayOfWeek >= 1 && dayOfWeek <= 5;
+      }
+      else if (task.repeat === 'Weekly') {
+        // Check if the target day is the same day of the week as the original due date
+        isDueOnTargetDay = due.getDay() === targetDate.getDay();
+      }
+      else if (task.repeat === 'Monthly') {
+        // Check if the target day is the same day of the month as the original due date
+        isDueOnTargetDay = due.getDate() === targetDate.getDate();
+      }
+      else if (task.repeat === 'Yearly') {
+        // Check if the target day is the same day and month as the original due date
+        isDueOnTargetDay = due.getDate() === targetDate.getDate() && 
+                           due.getMonth() === targetDate.getMonth();
+      }
+      else if (task.repeat === 'Custom') {
+        // For custom repeats, we need to check if the target day matches the pattern
+        if (task.repeatUnit === 'day') {
+          // Calculate days between original due date and target date
+          const daysDiff = Math.floor((targetDate - due) / (1000 * 60 * 60 * 24));
+          isDueOnTargetDay = daysDiff % task.repeatInterval === 0;
+        }
+        else if (task.repeatUnit === 'week') {
+          // For weekly repeats, check if specific weekdays are selected
+          if (task.repeatWeekdays && Array.isArray(task.repeatWeekdays)) {
+            const dayOfWeek = targetDate.getDay();
+            isDueOnTargetDay = task.repeatWeekdays[dayOfWeek] === true;
+          } else {
+            // If no weekdays specified, check if it's the same day of the week
+            isDueOnTargetDay = due.getDay() === targetDate.getDay();
+          }
+        }
+        else if (task.repeatUnit === 'month') {
+          // For monthly repeats, check if it's the same day of the month
+          isDueOnTargetDay = due.getDate() === targetDate.getDate();
+        }
+        else if (task.repeatUnit === 'year') {
+          // For yearly repeats, check if it's the same day and month
+          isDueOnTargetDay = due.getDate() === targetDate.getDate() && 
+                             due.getMonth() === targetDate.getMonth();
+        }
+      }
+      
+      // If the task is due on the target day, add its minutes
+      if (isDueOnTargetDay) {
+        totalMinutesOnTargetDay += time;
+      }
+    }
+  }
+  
+  return totalMinutesOnTargetDay;
+}
+
+/**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async event => {
@@ -212,15 +300,20 @@ exports.handler = async event => {
   const repeatingTasks = result14Days.repeatingTasks;
   
   // Calculate the capped todo
-  const cappedTodo = Math.min(todo, theoreticalMinimum + 60);
+  const cappedTodo = Math.min(todo, Math.max(theoreticalMinimum + 60, 15.5 * 60))
   
   // Find the minimum number of days needed to complete all tasks within the capped todo goal
   const daysUntilAllDone = findMinimumDaysNeeded(today, allTasks, done, cappedTodo);
+  
+  // Calculate the minutes that will be added on the day that occurs in daysUntilAllDone + 1
+  const minutesOnTargetDay = findMinutesOnTargetDay(today, allTasks, daysUntilAllDone);
 
   console.log(`DONE: ${done}`)
   console.log(`TODO: ${todo}`)
   console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
   console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
+  console.log(`MINUTES ON TARGET DAY: ${minutesOnTargetDay}`)
+  console.log(`REPEATING TASKS: ${JSON.stringify(repeatingTasks)}`)
 
   const streakBeforeToday = data?.Item?.streakBeforeToday ?? 0
   const lives = data?.Item?.lives ?? 0
@@ -264,8 +357,8 @@ exports.handler = async event => {
       streak,
       streakIsActive,
       theoreticalMinimum,
-      repeatingTasks,
       daysUntilAllDone,
+      minutesToReduceTomorrowDays: minutesOnTargetDay,
     }),
   }
 
