@@ -1,10 +1,12 @@
-import { faFire, faHeart, faStar, faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowDown,
+  faFire,
+  faHeart,
+  faStar,
+} from '@fortawesome/free-solid-svg-icons'
 import { minutesToHours } from '../helpers/time'
 import { useDate } from '../hooks/useDate'
-import {
-  useQueryProgressToday,
-  useQueryProgressTomorrow,
-} from '../hooks/useQueryProgressToday'
+import { useQueryProgressToday } from '../hooks/useQueryProgressToday'
 import { Tag } from './tags'
 
 const START_OF_DAY = 8 * 60 + 30 // 8:30
@@ -16,11 +18,22 @@ const Progress = () => {
 
   if (progress.data === undefined) return <></>
 
-  const { done, lives, streak, streakIsActive, todo, theoreticalMinimum, daysUntilAllDone, minutesToReduceTomorrowDays } = progress.data
+  const {
+    done,
+    lives,
+    streak,
+    streakIsActive,
+    todo,
+    theoreticalMinimum,
+    daysUntilAllDone,
+    minutesToReduceTomorrowDays,
+  } = progress.data
 
   console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
   console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
-  console.log(`MINUTES TO REDUCE TOMORROW'S DAYS: ${minutesToReduceTomorrowDays}`)
+  console.log(
+    `MINUTES TO REDUCE TOMORROW'S DAYS: ${minutesToReduceTomorrowDays}`
+  )
 
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =
@@ -38,13 +51,6 @@ const Progress = () => {
     (doneUsingLives - doneUsingAllLives) * 2 +
     (done - doneUsingLives) * 3
 
-  const progressTomorrow = useQueryProgressTomorrow()
-  const toDoTodayInOrderToReduceTomorrow =
-    progressTomorrow.data && progress.data
-      ? (progressTomorrow.data.todo - progress.data.todo) * 14
-      : undefined
-
-  // console.log statement removed for production
   return (
     <div className='flex justify-center'>
       <div className='flex flex-col items-center gap-1 text-xs font-light'>
@@ -58,7 +64,7 @@ const Progress = () => {
           )}
         </div>
 
-        <div className='flex w-full justify-center gap-5 text-white flex-wrap max-w-full gap-y-1 mx-5'>
+        <div className='mx-5 flex w-full max-w-full flex-wrap justify-center gap-5 gap-y-1 text-white'>
           <Tag icon={faStar} text={'' + points} />
 
           <Tag
@@ -90,18 +96,19 @@ const Progress = () => {
               iconRight={true}
             />
           )}
-          
+
           {minutesToReduceTomorrowDays > 0 && (
             <Tag
               icon={faArrowDown}
-              text={minutesToHours(minutesToReduceTomorrowDays - done - livesUsed) + ' to'}
+              text={
+                minutesToHours(minutesToReduceTomorrowDays - done - livesUsed) +
+                ' to'
+              }
               iconRight={true}
             />
           )}
 
-          <Tag
-            text={`${daysUntilAllDone} days`}
-          />
+          <Tag text={`${daysUntilAllDone} days`} />
         </div>
 
         <div

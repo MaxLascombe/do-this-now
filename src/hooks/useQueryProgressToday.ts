@@ -19,7 +19,7 @@ export const useQueryProgressToday = () => {
   return useQuery(['tasks', 'progresstoday', date], async () => {
     const res = await handleGet({
       path: '/tasks/progresstoday',
-            queryParams: { date },
+      queryParams: { date },
     })
     console.log(`RES: ${JSON.stringify(res)}`)
     return progressTodaySchema.parse(res)
