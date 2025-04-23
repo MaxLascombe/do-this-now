@@ -13,7 +13,11 @@ const Progress = () => {
 
   if (progress.data === undefined) return <></>
 
-  const { done, lives, streak, streakIsActive, todo } = progress.data
+  const { done, lives, streak, streakIsActive, todo, theoreticalMinimum, repeatingTasks, daysUntilAllDone } = progress.data
+
+  console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
+  console.log(`REPEATING TASKS:`, repeatingTasks)
+  console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
 
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =
@@ -75,6 +79,10 @@ const Progress = () => {
               iconRight={true}
             />
           )}
+
+          <Tag
+            text={`${daysUntilAllDone} days`}
+          />
         </div>
 
         <div
