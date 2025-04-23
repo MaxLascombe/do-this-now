@@ -9,21 +9,19 @@ const progressTodaySchema = z.object({
   todo: z.number(),
   streak: z.number(),
   streakIsActive: z.boolean(),
+  theoreticalMinimum: z.number(),
+  daysUntilAllDone: z.number(),
+  minutesToReduceTomorrowDays: z.number(),
 })
-
-const useQueryProgress = (date: ReturnType<typeof dateString>) =>
-  useQuery(['tasks', 'progresstoday', date], async () =>
-    progressTodaySchema.parse(
-      await handleGet({ path: '/tasks/progresstoday', queryParams: { date } })
-    )
-  )
 
 export const useQueryProgressToday = () => {
   const date = dateString(new Date())
-  return useQueryProgress(date)
-}
-
-export const useQueryProgressTomorrow = () => {
-  const date = dateString(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
-  return useQueryProgress(date)
+  return useQuery(['tasks', 'progresstoday', date], async () => {
+    const res = await handleGet({
+      path: '/tasks/progresstoday',
+      queryParams: { date },
+    })
+    console.log(`RES: ${JSON.stringify(res)}`)
+    return progressTodaySchema.parse(res)
+  })
 }
