@@ -38,7 +38,7 @@
     "knip": "knip",
     "prettier": "prettier src/**/*.{js,ts,tsx} --check",
     "ts-coverage": "typescript-coverage-report",
-    "COMMENTINGOUTamplify:APItasksTop": "echo \"COMPILING TYPESCRIPT\" && cd amplify/backend/function/APItasksTop && tsc -p ./tsconfig.json && cd - && echo \"DONE COMPILING TYPESCRIPT\""
+    "amplify:APItasksTop": "echo \"COMPILING TYPESCRIPT\" && cd amplify/backend/function/APItasksTop && tsc -p ./tsconfig.json && cd - && echo \"DONE COMPILING TYPESCRIPT\""
   },
   "browserslist": {
     "production": [

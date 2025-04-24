@@ -219,6 +219,7 @@
       "service": "Lambda"
     }
   },
+  "hosting": {},
   "parameters": {
     "AMPLIFY_function_APIgetTask_deploymentBucketName": {
       "usedBy": [
