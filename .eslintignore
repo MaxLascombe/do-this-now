@@ -1,1 +1,3 @@
 amplify/#current-cloud-backend/*
+dist/*
+coverage-ts/*

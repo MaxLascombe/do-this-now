@@ -52,8 +52,8 @@ const Progress = () => {
     (done - doneUsingLives) * 3
 
   return (
-    <div className='flex justify-center'>
-      <div className='flex flex-col items-center gap-1 text-xs font-light'>
+    <div className='mx-5 flex justify-center'>
+      <div className='max-w-screen flex flex-col items-center gap-1 text-xs font-light'>
         <div className='flex w-full justify-center gap-5 text-white'>
           {diff > 0 ? (
             <>{minutesToHours(Math.floor(diff))} ahead of schedule</>
@@ -64,7 +64,7 @@ const Progress = () => {
           )}
         </div>
 
-        <div className='mx-5 flex w-full max-w-full flex-wrap justify-center gap-5 gap-y-1 text-white'>
+        <div className='mx-5 flex flex-wrap justify-center gap-5 gap-y-1 text-white'>
           <Tag icon={faStar} text={'' + points} />
 
           <Tag

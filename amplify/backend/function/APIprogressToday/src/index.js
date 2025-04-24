@@ -326,7 +326,7 @@ exports.handler = async event => {
   let streak = streakBeforeToday
   let streakIsActive = false
 
-  if (done + lives >= todo) {
+  if (done + lives >= cappedTodo) {
     // done with today's tasks
     streak++
     streakIsActive = true
@@ -343,7 +343,7 @@ exports.handler = async event => {
       ExpressionAttributeNames: { '#x': 'streakBeforeToday', '#x2': 'lives' },
       ExpressionAttributeValues: {
         ':y': streak,
-        ':y2': done + lives - todo,
+        ':y2': done + lives - cappedTodo,
       },
     }
 

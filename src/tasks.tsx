@@ -155,107 +155,174 @@ const Tasks = () => {
 
   return (
     <RequireAuth>
-      <div className='my-10 mx-5 flex h-screen flex-col items-center gap-1'>
-        <Progress />
-        <div className='mt-2 flex flex-row flex-wrap justify-center'>
-          <Button onClick={() => navigate('/')} icon={faHome} text='Home' />
-          <Button
-            onClick={() => navigate('/new-task')}
-            icon={faPlusCircle}
-            text='New Task'
-          />
-          <Button
-            onClick={() => setSort(s => (s === 'CHRON' ? 'TOP' : 'CHRON'))}
-            icon={faArrowDown}
-            text='Toggle Order'
-          />
+      <div className='flex h-screen flex-col'>
+        <div className='flex flex-col gap-4 py-4'>
+          <Progress />
+          <div className='flex flex-row flex-wrap justify-center'>
+            <Button onClick={() => navigate('/')} icon={faHome} text='Home' />
+            <Button
+              onClick={() => navigate('/new-task')}
+              icon={faPlusCircle}
+              text='New Task'
+            />
+            <Button
+              onClick={() => setSort(s => (s === 'CHRON' ? 'TOP' : 'CHRON'))}
+              icon={faArrowDown}
+              text='Toggle Order'
+            />
+          </div>
         </div>
-        {tasks.map((task: (typeof tasks)[number], i: number) => {
-          const previousTask = i > 0 ? tasks[i - 1] : undefined
-          return (
-            <Fragment key={task.title}>
-              {sort === 'CHRON' && (
-                <>
-                  {(previousTask === undefined ||
-                    formatDate(newSafeDate(previousTask.due)) !==
-                      formatDate(newSafeDate(task.due))) && (
-                    <div
-                      className={
-                        (newSafeDate(task.due) <
-                        new Date(
-                          new Date().getFullYear(),
-                          new Date().getMonth(),
-                          new Date().getDate(),
-                          0,
-                          0,
-                          0
-                        )
-                          ? 'text-orange-300'
-                          : 'text-white') + ' text-center text-sm md:max-w-sm'
-                      }>
-                      {newSafeDate(task.due).toDateString()}
-                    </div>
-                  )}
-                </>
-              )}
-              {sort === 'TOP' && i === firstTaskDueAfterToday && (
-                <div className='text-center text-sm text-white md:max-w-sm'>
-                  Due after today
+        <div className='flex-1 overflow-y-auto'>
+          <div className='mx-5 flex flex-col items-center gap-1'>
+            {sort === 'CHRON' ? (
+              Object.entries(
+                tasks.reduce((groups, task) => {
+                  const date = formatDate(newSafeDate(task.due))
+                  if (!groups[date]) {
+                    groups[date] = []
+                  }
+                  groups[date].push(task)
+                  return groups
+                }, {} as Record<string, typeof tasks>)
+              ).map(([date, dateTasks]) => (
+                <div key={date} className='flex w-full flex-col items-center'>
+                  <div
+                    className={
+                      (newSafeDate(dateTasks[0].due) <
+                      new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth(),
+                        new Date().getDate(),
+                        0,
+                        0,
+                        0
+                      )
+                        ? 'text-orange-300'
+                        : 'text-white') +
+                      ' sticky top-0 w-full bg-black py-2 text-center text-sm md:max-w-sm'
+                    }>
+                    {newSafeDate(dateTasks[0].due).toDateString()}
+                  </div>
+                  <div className='flex w-full flex-col items-center'>
+                    {dateTasks.map(task => (
+                      <Fragment key={task.title}>
+                        <TaskBox
+                          innerRef={(e: HTMLButtonElement) =>
+                            (taskElems.current[tasks.indexOf(task)] = e)
+                          }
+                          isSelected={tasks.indexOf(task) === selectedTask}
+                          onClick={() => setSelectedTask(tasks.indexOf(task))}
+                          task={task}
+                        />
+                        {tasks.indexOf(task) === selectedTask && (
+                          <div className='flex flex-row flex-wrap justify-center py-2'>
+                            {[
+                              {
+                                text: 'Complete',
+                                icon: faCheckCircle,
+                                onClick: completeTask,
+                                loading:
+                                  doneMutation.isLoading &&
+                                  doneMutation.variables === task,
+                              },
+                              {
+                                text: 'Update',
+                                icon: faPen,
+                                onClick: () =>
+                                  navigate(
+                                    `/update-task/${encodeURIComponent(
+                                      task.title
+                                    )}`
+                                  ),
+                              },
+                              {
+                                text: 'Delete',
+                                icon: faTrash,
+                                onClick: () =>
+                                  window.confirm(
+                                    `Are you sure you want to delete '${task.title}'?`
+                                  ) && deleteMutation.mutate(task),
+                                loading:
+                                  deleteMutation.isLoading &&
+                                  deleteMutation.variables === task,
+                              },
+                            ].map(props => (
+                              <Button key={props.text} {...props} />
+                            ))}
+                          </div>
+                        )}
+                      </Fragment>
+                    ))}
+                  </div>
                 </div>
-              )}
-              {sort === 'TOP' && i === firstSnoozedTask && (
-                <div className='text-center text-sm text-white md:max-w-sm'>
-                  Snoozed
-                </div>
-              )}
-              <TaskBox
-                innerRef={(e: HTMLButtonElement) => (taskElems.current[i] = e)}
-                isSelected={i === selectedTask}
-                onClick={() => setSelectedTask(i)}
-                task={task}
-              />
-              {i === selectedTask && (
-                <div className='flex flex-row flex-wrap justify-center py-2'>
-                  {[
-                    {
-                      text: 'Complete',
-                      icon: faCheckCircle,
-                      onClick: completeTask,
-                      loading:
-                        doneMutation.isLoading &&
-                        doneMutation.variables === task,
-                    },
-                    {
-                      text: 'Update',
-                      icon: faPen,
-                      onClick: () =>
-                        navigate(
-                          `/update-task/${encodeURIComponent(task.title)}`
-                        ),
-                    },
-                    {
-                      text: 'Delete',
-                      icon: faTrash,
-                      onClick: () =>
-                        window.confirm(
-                          `Are you sure you want to delete '${task.title}'?`
-                        ) && deleteMutation.mutate(task),
-                      loading:
-                        deleteMutation.isLoading &&
-                        deleteMutation.variables === task,
-                    },
-                  ].map(props => (
-                    <Button key={props.text} {...props} />
-                  ))}
-                </div>
-              )}
-            </Fragment>
-          )
-        })}
-        {((sort === 'CHRON' && isFetching) ||
-          (sort === 'TOP' && isFetchingTop)) && <Loading />}
+              ))
+            ) : (
+              <>
+                {tasks.map((task: (typeof tasks)[number], i: number) => (
+                  <Fragment key={task.title}>
+                    {i === firstTaskDueAfterToday && (
+                      <div className='sticky top-0 w-full bg-black py-2 text-center text-sm text-white md:max-w-sm'>
+                        Due after today
+                      </div>
+                    )}
+                    {i === firstSnoozedTask && (
+                      <div className='sticky top-0 w-full bg-black py-2 text-center text-sm text-white md:max-w-sm'>
+                        Snoozed
+                      </div>
+                    )}
+                    <TaskBox
+                      innerRef={(e: HTMLButtonElement) =>
+                        (taskElems.current[i] = e)
+                      }
+                      isSelected={i === selectedTask}
+                      onClick={() => setSelectedTask(i)}
+                      task={task}
+                    />
+                    {i === selectedTask && (
+                      <div className='flex flex-row flex-wrap justify-center py-2'>
+                        {[
+                          {
+                            text: 'Complete',
+                            icon: faCheckCircle,
+                            onClick: completeTask,
+                            loading:
+                              doneMutation.isLoading &&
+                              doneMutation.variables === task,
+                          },
+                          {
+                            text: 'Update',
+                            icon: faPen,
+                            onClick: () =>
+                              navigate(
+                                `/update-task/${encodeURIComponent(task.title)}`
+                              ),
+                          },
+                          {
+                            text: 'Delete',
+                            icon: faTrash,
+                            onClick: () =>
+                              window.confirm(
+                                `Are you sure you want to delete '${task.title}'?`
+                              ) && deleteMutation.mutate(task),
+                            loading:
+                              deleteMutation.isLoading &&
+                              deleteMutation.variables === task,
+                          },
+                        ].map(props => (
+                          <Button key={props.text} {...props} />
+                        ))}
+                      </div>
+                    )}
+                  </Fragment>
+                ))}
+              </>
+            )}
+            {((sort === 'CHRON' && isFetching) ||
+              (sort === 'TOP' && isFetchingTop)) && <Loading />}
+          </div>
+          <Hints keyActions={keyActions} />
+        </div>
       </div>
-      <Hints keyActions={keyActions} />
     </RequireAuth>
   )
 }
