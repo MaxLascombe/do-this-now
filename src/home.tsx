@@ -164,50 +164,41 @@ const Home = () => {
   ]
   useKeyAction(keyActions)
 
-  type ButtonTuple = [
-    () => void,
-    string | undefined,
-    typeof faBackward,
-    boolean?
-  ]
   const Buttons = () => {
-    const info: ButtonTuple[] = [
-      [
-        completeTask,
-        'Complete',
-        faCheckCircle,
-        doneMutation.isLoading && doneMutation.variables === selectedTask,
-      ],
-      [snoozeTask, 'Snooze', faBell],
-      [
-        () =>
-          selectedTask &&
-          navigate(`/update-task/${encodeURIComponent(selectedTask.title)}`),
-        undefined,
-        faPen,
-      ],
-      [
-        deleteTask,
-        undefined,
-        faTrash,
-        deleteMutation.isLoading && deleteMutation.variables === selectedTask,
-      ],
-    ]
-
-    if (selectedTask && selectedTask.subtasks.length > 0)
-      info.splice(2, 0, [snoozeAllSubtasks, 'Snooze all subtasks', faBell])
-
     return (
       <>
-        {info.map(([func, text, icon, loading]) => (
+        <Button
+          onClick={completeTask}
+          text={'Complete'}
+          icon={faCheckCircle}
+          loading={
+            doneMutation.isLoading && doneMutation.variables === selectedTask
+          }
+          disabled={topTasksQuery.dataUpdatedAt > Date.now() - 1000}
+        />
+        <Button onClick={snoozeTask} text={'Snooze'} icon={faBell} />
+        {selectedTask && selectedTask.subtasks.length > 0 && (
           <Button
-            key={func.name}
-            onClick={func}
-            text={text}
-            icon={icon}
-            loading={loading}
+            onClick={snoozeAllSubtasks}
+            text={'Snooze all subtasks'}
+            icon={faBell}
           />
-        ))}
+        )}
+        <Button
+          onClick={() =>
+            selectedTask &&
+            navigate(`/update-task/${encodeURIComponent(selectedTask.title)}`)
+          }
+          icon={faPen}
+        />
+        <Button
+          onClick={deleteTask}
+          icon={faTrash}
+          loading={
+            deleteMutation.isLoading &&
+            deleteMutation.variables === selectedTask
+          }
+        />
       </>
     )
   }
