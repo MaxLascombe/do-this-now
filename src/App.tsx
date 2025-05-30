@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'wouter'
 import { Button } from './components/button'
+import { Loading } from './components/loading'
 import { handleSignOut } from './helpers/auth'
 import History from './history'
 import Home from './home'
@@ -14,11 +15,13 @@ import UpdateTask from './updatetask'
 
 const App = () => {
   const [showCommitId, setShowCommitId] = useState(false)
-  const authState = useSelector((state: State) => state.authState)
+  const { hasLoadedAuth, authState } = useSelector((state: State) => state)
 
   return (
     <div className='w-100vw h-100vh bg-black'>
-      {authState !== 'authenticated' ? (
+      {!hasLoadedAuth ? (
+        <Loading />
+      ) : authState !== 'authenticated' ? (
         <Login />
       ) : (
         <>

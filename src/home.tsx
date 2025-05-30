@@ -15,7 +15,6 @@ import Hints from './components/hints'
 import { LastUpdated } from './components/lastupdated'
 import { Loading } from './components/loading'
 import Progress from './components/progress'
-import RequireAuth from './components/requireauth'
 import { TaskBox } from './components/taskbox'
 import { handleSignOut } from './helpers/auth'
 import useDing from './hooks/useDing'
@@ -213,60 +212,57 @@ const Home = () => {
   }
 
   return (
-    <RequireAuth>
-      <div className='flex h-screen flex-col items-center justify-center gap-2'>
-        {topTasksQuery.isPending || deleteMutation.isPending ? (
-          <Loading />
-        ) : (
-          <>
-            <Progress />
-            <div className='mx-5 mt-1 flex flex-row flex-wrap justify-center'>
-              <Button
-                onClick={() => navigate('/tasks')}
-                text={'All tasks'}
-                icon={faBars}
-              />
-              <Button
-                onClick={() => navigate('/new-task')}
-                text={'New task'}
-                icon={faPlusCircle}
-              />
-              <Button
-                onClick={() => navigate('/history')}
-                text={'History'}
-                icon={faBackward}
-              />
-            </div>
-            {tasks.length > 0 ? (
-              <>
-                {tasks.slice(0, 3).map((task: Task, i: number) => (
-                  <Fragment key={task.title}>
-                    <TaskBox
-                      isSelected={selectedTaskIndex === i}
-                      onClick={() =>
-                        (i === 0 || i === 1 || i === 2) &&
-                        setSelectedTaskIndex(i)
-                      }
-                      task={task}
-                      title={`(Shortcut: ${i + 1})`}
-                    />
-                    {selectedTaskIndex === i && (
-                      <div className='mx-5 flex flex-row flex-wrap justify-center'>
-                        <Buttons />
-                      </div>
-                    )}
-                  </Fragment>
-                ))}
-              </>
-            ) : (
-              'No tasks'
-            )}
-            <LastUpdated query={topTasksQuery} />
-          </>
-        )}
-        <Hints keyActions={keyActions} />
-      </div>
-    </RequireAuth>
+    <div className='flex h-screen flex-col items-center justify-center gap-2'>
+      {topTasksQuery.isPending || deleteMutation.isPending ? (
+        <Loading />
+      ) : (
+        <>
+          <Progress />
+          <div className='mx-5 mt-1 flex flex-row flex-wrap justify-center'>
+            <Button
+              onClick={() => navigate('/tasks')}
+              text={'All tasks'}
+              icon={faBars}
+            />
+            <Button
+              onClick={() => navigate('/new-task')}
+              text={'New task'}
+              icon={faPlusCircle}
+            />
+            <Button
+              onClick={() => navigate('/history')}
+              text={'History'}
+              icon={faBackward}
+            />
+          </div>
+          {tasks.length > 0 ? (
+            <>
+              {tasks.slice(0, 3).map((task: Task, i: number) => (
+                <Fragment key={task.title}>
+                  <TaskBox
+                    isSelected={selectedTaskIndex === i}
+                    onClick={() =>
+                      (i === 0 || i === 1 || i === 2) && setSelectedTaskIndex(i)
+                    }
+                    task={task}
+                    title={`(Shortcut: ${i + 1})`}
+                  />
+                  {selectedTaskIndex === i && (
+                    <div className='mx-5 flex flex-row flex-wrap justify-center'>
+                      <Buttons />
+                    </div>
+                  )}
+                </Fragment>
+              ))}
+            </>
+          ) : (
+            'No tasks'
+          )}
+          <LastUpdated query={topTasksQuery} />
+        </>
+      )}
+      <Hints keyActions={keyActions} />
+    </div>
   )
 }
 

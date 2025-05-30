@@ -16,12 +16,12 @@ type AuthState =
 
 export type State = {
   authState: AuthState
-  hasLoadedUser: boolean
+  hasLoadedAuth: boolean
 }
 
 const initialState: State = {
   authState: 'idle',
-  hasLoadedUser: false,
+  hasLoadedAuth: false,
 }
 
 type Action =
@@ -32,19 +32,14 @@ type Action =
       type: 'changeAuthState'
       payload: AuthState
     }
-  | {
-      type: 'changeState'
-      payload: Partial<State>
-    }
 
 const rootReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'logout':
-      return { ...initialState, hasLoadedUser: true }
+      return { ...initialState, hasLoadedAuth: true }
     case 'changeAuthState':
-      return { ...state, hasLoadedUser: true, authState: action.payload }
     default:
-      return { ...state, ...action.payload }
+      return { ...state, hasLoadedAuth: true, authState: action.payload }
   }
 }
 
