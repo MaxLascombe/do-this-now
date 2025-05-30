@@ -97,7 +97,7 @@ const Progress = () => {
             />
           )}
 
-          {minutesToReduceTomorrowDays > 0 && (
+          {minutesToReduceTomorrowDays - done > 0 && (
             <Tag
               icon={faArrowDown}
               text={minutesToHours(minutesToReduceTomorrowDays - done) + ' to'}
