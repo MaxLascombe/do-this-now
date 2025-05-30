@@ -12,6 +12,7 @@ const tasksSchema = z.object({
 })
 
 export const useQueryTasks = () =>
-  useQuery(['tasks'], async () =>
-    tasksSchema.parse(await handleGet({ path: '/tasks' }))
-  )
+  useQuery({
+    queryKey: ['tasks'],
+    queryFn: async () => tasksSchema.parse(await handleGet({ path: '/tasks' })),
+  })

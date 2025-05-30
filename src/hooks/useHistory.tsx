@@ -24,7 +24,9 @@ export const useHistory = (daysAgo: number = 0) => {
       new Date().getDate() - daysAgo
     )
   )
-  return useQuery(['tasks', 'history', date], async () =>
-    historySchema.parse(await handleGet({ path: `/tasks/history/${date}` }))
-  )
+  return useQuery({
+    queryKey: ['tasks', 'history', date],
+    queryFn: async () =>
+      historySchema.parse(await handleGet({ path: `/tasks/history/${date}` })),
+  })
 }

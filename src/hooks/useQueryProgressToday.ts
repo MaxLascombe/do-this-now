@@ -16,12 +16,14 @@ const progressTodaySchema = z.object({
 
 export const useQueryProgressToday = () => {
   const date = dateString(new Date())
-  return useQuery(['tasks', 'progresstoday', date], async () => {
-    const res = await handleGet({
-      path: '/tasks/progresstoday',
-      queryParams: { date },
-    })
-    console.log(`RES: ${JSON.stringify(res)}`)
-    return progressTodaySchema.parse(res)
+  return useQuery({
+    queryKey: ['tasks', 'progresstoday', date],
+    queryFn: async () =>
+      progressTodaySchema.parse(
+        await handleGet({
+          path: '/tasks/progresstoday',
+          queryParams: { date },
+        })
+      ),
   })
 }

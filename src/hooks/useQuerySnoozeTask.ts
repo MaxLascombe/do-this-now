@@ -8,7 +8,6 @@ import { handlePost } from './api'
 export const useQuerySnoozeTask = () => {
   const date = dateString(new Date())
   const queryClient = useQueryClient()
-  console.log(date)
 
   return useMutation({
     mutationFn: async ({

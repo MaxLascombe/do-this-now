@@ -10,14 +10,14 @@ const tasksSchema = z.object({
 
 export const useQueryTasksTop = () => {
   const date = dateString(new Date())
-  return useQuery(
-    ['tasks', 'top', date],
-    async () =>
+  return useQuery({
+    queryKey: ['tasks', 'top', date],
+    queryFn: async () =>
       tasksSchema.parse(
         await handleGet({
           path: '/tasks/top',
           queryParams: { date },
         })
-      ).Items
-  )
+      ).Items,
+  })
 }
