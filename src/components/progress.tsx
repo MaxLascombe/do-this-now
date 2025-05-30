@@ -1,4 +1,9 @@
-import { faFire, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowDown,
+  faFire,
+  faHeart,
+  faStar,
+} from '@fortawesome/free-solid-svg-icons'
 import { minutesToHours } from '../helpers/time'
 import { useDate } from '../hooks/useDate'
 import { useQueryProgressToday } from '../hooks/useQueryProgressToday'
@@ -13,7 +18,22 @@ const Progress = () => {
 
   if (progress.data === undefined) return <></>
 
-  const { done, lives, streak, streakIsActive, todo } = progress.data
+  const {
+    done,
+    lives,
+    streak,
+    streakIsActive,
+    todo,
+    theoreticalMinimum,
+    daysUntilAllDone,
+    minutesToReduceTomorrowDays,
+  } = progress.data
+
+  console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
+  console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
+  console.log(
+    `MINUTES TO REDUCE TOMORROW'S DAYS: ${minutesToReduceTomorrowDays}`
+  )
 
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =
@@ -32,8 +52,8 @@ const Progress = () => {
     (done - doneUsingLives) * 3
 
   return (
-    <div className='flex justify-center'>
-      <div className='flex flex-col items-center gap-1 text-xs font-light'>
+    <div className='mx-5 flex justify-center'>
+      <div className='max-w-screen flex flex-col items-center gap-1 text-xs font-light'>
         <div className='flex w-full justify-center gap-5 text-white'>
           {diff > 0 ? (
             <>{minutesToHours(Math.floor(diff))} ahead of schedule</>
@@ -43,15 +63,16 @@ const Progress = () => {
             <>On schedule</>
           )}
         </div>
-        <div className='flex w-full justify-center gap-5 text-white'>
+
+        <div className='mx-5 flex flex-wrap justify-center gap-5 gap-y-1 text-white'>
           <Tag icon={faStar} text={'' + points} />
+
           <Tag
             icon={faFire}
             text={'' + streak}
             color={streakIsActive ? 'text-amber-500' : 'text-white/50'}
           />
-        </div>
-        <div className='flex w-full justify-center gap-5 text-white'>
+
           {livesLeft > 0 ? (
             <Tag
               icon={faHeart}
@@ -75,6 +96,16 @@ const Progress = () => {
               iconRight={true}
             />
           )}
+
+          {minutesToReduceTomorrowDays > 0 && (
+            <Tag
+              icon={faArrowDown}
+              text={minutesToHours(minutesToReduceTomorrowDays - done) + ' to'}
+              iconRight={true}
+            />
+          )}
+
+          <Tag text={`${daysUntilAllDone} days`} />
         </div>
 
         <div
