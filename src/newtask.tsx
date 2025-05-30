@@ -7,12 +7,12 @@ import { useQueryNewTask } from './hooks/useQueryNewTask'
 import { Task, TaskInput } from './types/task'
 
 const NewTask = () => {
-  const { error, isLoading, mutate } = useQueryNewTask()
+  const { error, isPending, mutate } = useQueryNewTask()
 
   return (
     <RequireAuth>
       <div className='space-y-8 divide-y divide-gray-700 p-10 text-white'>
-        {isLoading && (
+        {isPending && (
           <div className='fixed top-0 left-0 right-0 bottom-0 flex h-screen flex-col justify-center bg-gray-800 opacity-90'>
             <Loading />
           </div>

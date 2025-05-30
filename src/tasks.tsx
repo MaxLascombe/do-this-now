@@ -222,7 +222,7 @@ const Tasks = () => {
                                 icon: faCheckCircle,
                                 onClick: completeTask,
                                 loading:
-                                  doneMutation.isLoading &&
+                                  doneMutation.isPending &&
                                   doneMutation.variables === task,
                               },
                               {
@@ -243,7 +243,7 @@ const Tasks = () => {
                                     `Are you sure you want to delete '${task.title}'?`
                                   ) && deleteMutation.mutate(task),
                                 loading:
-                                  deleteMutation.isLoading &&
+                                  deleteMutation.isPending &&
                                   deleteMutation.variables === task,
                               },
                             ].map(props => (
@@ -286,7 +286,7 @@ const Tasks = () => {
                             icon: faCheckCircle,
                             onClick: completeTask,
                             loading:
-                              doneMutation.isLoading &&
+                              doneMutation.isPending &&
                               doneMutation.variables === task,
                           },
                           {
@@ -305,7 +305,7 @@ const Tasks = () => {
                                 `Are you sure you want to delete '${task.title}'?`
                               ) && deleteMutation.mutate(task),
                             loading:
-                              deleteMutation.isLoading &&
+                              deleteMutation.isPending &&
                               deleteMutation.variables === task,
                           },
                         ].map(props => (

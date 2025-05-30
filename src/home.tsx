@@ -176,7 +176,7 @@ const Home = () => {
         completeTask,
         'Complete',
         faCheckCircle,
-        doneMutation.isLoading && doneMutation.variables === selectedTask,
+        doneMutation.isPending && doneMutation.variables === selectedTask,
       ],
       [snoozeTask, 'Snooze', faBell],
       [
@@ -190,7 +190,7 @@ const Home = () => {
         deleteTask,
         undefined,
         faTrash,
-        deleteMutation.isLoading && deleteMutation.variables === selectedTask,
+        deleteMutation.isPending && deleteMutation.variables === selectedTask,
       ],
     ]
 
@@ -215,7 +215,7 @@ const Home = () => {
   return (
     <RequireAuth>
       <div className='flex h-screen flex-col items-center justify-center gap-2'>
-        {topTasksQuery.isLoading || deleteMutation.isLoading ? (
+        {topTasksQuery.isPending || deleteMutation.isPending ? (
           <Loading />
         ) : (
           <>

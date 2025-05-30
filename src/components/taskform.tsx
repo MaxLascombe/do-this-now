@@ -204,7 +204,7 @@ const TaskForm = ({
           <div className='flex max-w-lg items-center gap-2 rounded-md shadow-sm'>
             <FormButton icon={faMinus} onClick={decrementDate} />
             <Input
-              innerRef={dueMonthRef}
+              ref={dueMonthRef}
               type='number'
               step={1}
               name='due-month'
@@ -222,7 +222,7 @@ const TaskForm = ({
               }
             />
             <Input
-              innerRef={dueDayRef}
+              ref={dueDayRef}
               type='number'
               step={1}
               name='due-day'
@@ -240,7 +240,7 @@ const TaskForm = ({
               }
             />
             <Input
-              innerRef={dueYearRef}
+              ref={dueYearRef}
               type='number'
               step={1}
               name='due-year'
@@ -511,7 +511,7 @@ const NumberInput = (
     <div className='flex-1 flex-grow'>
       <Input
         id={props.id}
-        innerRef={props.innerRef}
+        ref={props.innerRef}
         type='number'
         step={props.step}
         min={props.min}
