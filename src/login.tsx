@@ -1,7 +1,7 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, useLocation } from 'wouter'
+import { Redirect } from 'wouter'
 import { Button } from './components/button'
 import { Input } from './components/input'
 import { handleSignIn } from './helpers/auth'
@@ -15,8 +15,6 @@ const Login = () => {
   // const [newPassword, setNewPassword] = useState('')
 
   const authState = useSelector((state: State) => state.authState)
-
-  const navigate = useLocation()[1]
 
   const login = () => {
     // if (showNewPassword) {
