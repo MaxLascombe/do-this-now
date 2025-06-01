@@ -33,10 +33,13 @@ export const TaskBox = ({
         (isSelected
           ? 'border-gray-700 bg-gray-900 text-white '
           : 'border-gray-800 text-gray-300 text-white hover:border-gray-700 hover:bg-gray-900 ') +
-        'flex w-full max-w-sm flex-col gap-2 rounded-lg border p-4 text-left outline-none ring-white ring-offset-0 ring-offset-black focus:z-10 focus:ring '
+        'relative flex w-full max-w-sm flex-col gap-2 rounded-lg border p-4 text-left outline-none ring-white ring-offset-0 ring-offset-black focus:z-10 focus:ring'
       }
       title={title}
       {...(innerRef !== null ? { ref: innerRef } : {})}>
+      {/* <div
+        className='absolute top-2 right-2 h-2 w-2 rounded-full bg-orange-300'
+        title='This task is far in the future and not counted towards the number of days to completion'></div> */}
       <div>
         <span>
           {showSubtask

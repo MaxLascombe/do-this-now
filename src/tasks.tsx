@@ -201,7 +201,7 @@ const Tasks = () => {
                   }>
                   {newSafeDate(dateTasks[0].due).toDateString()}
                 </div>
-                <div className='flex w-full flex-col items-center'>
+                <div className='flex w-full flex-col items-center gap-1'>
                   {dateTasks.map(task => (
                     <Fragment key={task.title}>
                       <TaskBox
