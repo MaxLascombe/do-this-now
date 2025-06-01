@@ -24,16 +24,9 @@ const Progress = () => {
     streak,
     streakIsActive,
     todo,
-    theoreticalMinimum,
     daysUntilAllDone,
     minutesToReduceTomorrowDays,
   } = progress.data
-
-  console.log(`THEORETICAL MINIMUM: ${theoreticalMinimum}`)
-  console.log(`DAYS UNTIL ALL DONE: ${daysUntilAllDone}`)
-  console.log(
-    `MINUTES TO REDUCE TOMORROW'S DAYS: ${minutesToReduceTomorrowDays}`
-  )
 
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =

@@ -529,7 +529,7 @@ const NumberInput = (
 
 const FormButton = (
   props: Omit<ComponentProps<typeof Button>, 'className'>
-) => <Button {...props} className='border-gray-800' />
+) => <Button {...props} type='button' className='border-gray-800' />
 
 const FormSelect = (props: ComponentProps<'select'>) => (
   <select
