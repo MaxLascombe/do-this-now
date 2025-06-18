@@ -1,1 +1,4 @@
 amplify/#current-cloud-backend/*
+dist/*
+coverage-ts/*
+amplify/backend/function/APItasksTop/src/*

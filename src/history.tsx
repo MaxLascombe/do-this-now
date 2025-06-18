@@ -15,7 +15,6 @@ import { Button } from './components/button'
 import Hints from './components/hints'
 import { Loading } from './components/loading'
 import Progress from './components/progress'
-import RequireAuth from './components/requireauth'
 import { TaskBox } from './components/taskbox'
 import { useHistory } from './hooks/useHistory'
 import useKeyAction, { KeyAction } from './hooks/useKeyAction'
@@ -57,7 +56,7 @@ const History = () => {
   useKeyAction(keyActions)
 
   return (
-    <RequireAuth>
+    <>
       <div className='my-10 mx-5 flex h-screen flex-col items-center'>
         <Progress />
         <div className='mt-2 flex flex-row flex-wrap justify-center pb-2'>
@@ -91,7 +90,7 @@ const History = () => {
         )}
       </div>
       <Hints keyActions={keyActions} />
-    </RequireAuth>
+    </>
   )
 }
 

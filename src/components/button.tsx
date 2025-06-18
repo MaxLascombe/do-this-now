@@ -7,7 +7,6 @@ export const Button = ({
   icon,
   text,
   loading = false,
-  type = 'button',
   ...props
 }: {
   icon: ComponentProps<typeof FontAwesomeIcon>['icon']
@@ -15,7 +14,6 @@ export const Button = ({
   loading?: boolean
 } & Omit<ComponentProps<'button'>, 'children'>) => (
   <button
-    type={type}
     {...props}
     className={overrideTailwindClasses(
       'block flex items-center gap-1 rounded-full border border-black py-2 px-2.5 text-sm font-bold text-white outline-none ring-white ring-offset-0 ring-offset-black hover:border-gray-700 hover:bg-gray-900 focus:z-10 focus:ring disabled:opacity-50 disabled:hover:border-gray-800 disabled:hover:bg-black ' +

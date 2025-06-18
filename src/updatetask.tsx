@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useLocation } from 'wouter'
 import { Button } from './components/button'
 import { Loading } from './components/loading'
-import RequireAuth from './components/requireauth'
 import TaskForm from './components/taskform'
 import { useQueryGetTask } from './hooks/useQueryGetTask'
 import { useQueryUpdateTask } from './hooks/useQueryUpdateTask'
@@ -30,7 +29,7 @@ const UpdateTask = () => {
   const updateTaskMutation = useQueryUpdateTask()
 
   return (
-    <RequireAuth>
+    <>
       {isTaskLoading || !task ? (
         <div className='absolute top-0 left-0 right-0 bottom-0 flex h-screen flex-col justify-center bg-gray-800 opacity-90'>
           <Loading />
@@ -72,7 +71,7 @@ const UpdateTask = () => {
           </div>
         </div>
       )}
-    </RequireAuth>
+    </>
   )
 }
 

@@ -16,6 +16,7 @@ export const handleSignIn = async (password: string) => {
 
 export const handleSignOut = async () => {
   try {
+    store.dispatch({ type: 'logout' })
     await signOut()
   } catch (e) {
     console.error('error signing out: ', e)
