@@ -28,11 +28,13 @@ const Progress = () => {
     minutesToReduceTomorrowDays,
   } = progress.data
 
+  const maxTodo = Math.max(todo, minutesToReduceTomorrowDays)
+
   const timeOfDay = now.getHours() * 60 + now.getMinutes()
   const percentageOfDay =
     (timeOfDay - START_OF_DAY) / (MINUTES_IN_DAY - START_OF_DAY)
-  const shouldBeDone = todo * percentageOfDay
-  const diff = done + lives - shouldBeDone
+  const shouldBeDone = maxTodo * percentageOfDay
+  const diff = done - shouldBeDone
 
   const livesUsed = Math.min(lives, todo - done)
   const livesLeft = lives - livesUsed
