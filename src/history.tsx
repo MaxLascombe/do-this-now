@@ -57,7 +57,7 @@ const History = () => {
 
   return (
     <>
-      <div className='my-10 mx-5 flex h-screen flex-col items-center'>
+      <div className='mx-5 my-10 flex h-screen flex-col items-center'>
         <Progress />
         <div className='mt-2 flex flex-row flex-wrap justify-center pb-2'>
           <Button onClick={() => navigate('/')} icon={faHome} text='Home' />
