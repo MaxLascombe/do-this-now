@@ -11,7 +11,7 @@ const NewTask = () => {
   return (
     <div className='space-y-8 divide-y divide-gray-700 p-10 text-white'>
       {isPending && (
-        <div className='fixed top-0 left-0 right-0 bottom-0 flex h-screen flex-col justify-center bg-gray-800 opacity-90'>
+        <div className='fixed bottom-0 left-0 right-0 top-0 flex h-screen flex-col justify-center bg-gray-800 opacity-90'>
           <Loading />
         </div>
       )}

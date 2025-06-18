@@ -47,12 +47,12 @@ const App = () => {
           </Switch>
           <button
             onClick={() => setShowCommitId(x => !x)}
-            className={`fixed left-0 bottom-0 max-w-full overflow-hidden overflow-ellipsis text-xs ${
+            className={`fixed bottom-0 left-0 max-w-full overflow-hidden overflow-ellipsis text-xs ${
               showCommitId ? 'text-gray-700' : 'text-transparent'
             }`}>
             {import.meta.env.VITE_COMMIT_ID}
           </button>
-          <div className='fixed right-5 bottom-5'>
+          <div className='fixed bottom-5 right-5'>
             <Button
               icon={faRightFromBracket}
               onClick={handleSignOut}
