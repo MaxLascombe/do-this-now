@@ -100,7 +100,14 @@ const Progress = () => {
             />
           )}
 
-          <Tag text={`${daysUntilAllDone} days`} />
+          <Tag
+            text={`${daysUntilAllDone} days (${new Date(
+              new Date().setDate(now.getDate() + daysUntilAllDone)
+            ).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+            })})`}
+          />
         </div>
 
         <div
